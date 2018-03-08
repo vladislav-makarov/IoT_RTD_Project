@@ -2,7 +2,10 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="transit-test/Program.cs">
     <Files>
       <File FileName="transit-test/Stop.cs" Line="1" Column="1" />
-      <File FileName="transit-test/Program.cs" Line="7" Column="1" />
+      <File FileName="transit-test/Program.cs" Line="53" Column="74" />
+      <File FileName="transit-test/App.config" Line="1" Column="1" />
+      <File FileName="transit-test/packages.config" Line="1" Column="1" />
+      <File FileName="transit-test/Trip.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

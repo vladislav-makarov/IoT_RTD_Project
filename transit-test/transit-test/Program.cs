@@ -9,6 +9,14 @@ namespace transit_test
 {
     class Program
     {
+        //struct stop
+        //{
+        //    String StopName;
+        //    double lattitude;
+        //    double longitude;
+        //}
+        //stop [] AllStops;
+
         static void Main(string[] args)
         {
             // You have to use one or the other:
@@ -49,6 +57,16 @@ namespace transit_test
                             if (Stop.stops.ContainsKey(entity.vehicle.stop_id))
                             {
                                 Console.WriteLine("The name of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_name + "\"");
+
+                                //for (int i = 0; int < stopNames.count(); i++) {
+                                    //if (stopNames[i] != Stop.stops[entity.vehicle.stop_id].stop_name)
+                                    //{
+                                    //    stopNames[i].StopName = Stop.stops[entity.vehicle.stop_id].stop_name;
+                                    //    stopNames[i].latitude = entity.vehicle.position.latitude;
+                                    //    stopNames[i].longitude = entity.vehicle.position.longitude;
+                                    //}
+
+
                                 Console.WriteLine("The Latitude of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_lat + "\"");
                                 Console.WriteLine("The Longitude of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_long + "\"");
                                 string wheelChairOK = "IS NOT";
