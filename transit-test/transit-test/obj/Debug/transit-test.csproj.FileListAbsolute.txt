@@ -39,3 +39,13 @@ C:/Users/jkb/Desktop/transit-test/transit-test/obj/Debug/transit-test.csprojReso
 /Users/vmakarov/IoT_RTD_Project/transit-test/transit-test/obj/Debug/transit-test.csproj.CoreCompileInputs.cache
 /Users/vmakarov/IoT_RTD_Project/transit-test/transit-test/obj/Debug/transit-test.exe
 /Users/vmakarov/IoT_RTD_Project/transit-test/transit-test/obj/Debug/transit-test.pdb
+C:\Users\mark\Documents\GitHub\IoT_RTD_Project\transit-test\transit-test\bin\Debug\transit-test.exe.config
+C:\Users\mark\Documents\GitHub\IoT_RTD_Project\transit-test\transit-test\obj\Debug\transit-test.exe
+C:\Users\mark\Documents\GitHub\IoT_RTD_Project\transit-test\transit-test\obj\Debug\transit-test.pdb
+C:\Users\mark\Documents\GitHub\IoT_RTD_Project\transit-test\transit-test\bin\Debug\transit-test.exe
+C:\Users\mark\Documents\GitHub\IoT_RTD_Project\transit-test\transit-test\bin\Debug\transit-test.pdb
+C:\Users\mark\Documents\GitHub\IoT_RTD_Project\transit-test\transit-test\bin\Debug\GtfsRealtimeBindings.dll
+C:\Users\mark\Documents\GitHub\IoT_RTD_Project\transit-test\transit-test\bin\Debug\protobuf-net.dll
+C:\Users\mark\Documents\GitHub\IoT_RTD_Project\transit-test\transit-test\bin\Debug\protobuf-net.xml
+C:\Users\mark\Documents\GitHub\IoT_RTD_Project\transit-test\transit-test\obj\Debug\transit-test.csprojResolveAssemblyReference.cache
+C:\Users\mark\Documents\GitHub\IoT_RTD_Project\transit-test\transit-test\obj\Debug\transit-test.csproj.transit-test.exe.config

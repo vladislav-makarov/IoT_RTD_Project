@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using ProtoBuf;
 using transit_realtime;
+using System.Collections.Generic;
 
 namespace transit_test
 {
@@ -15,12 +16,13 @@ namespace transit_test
         //    double lattitude;
         //    double longitude;
         //}
-        //stop [] AllStops;
+       
 
 
-            //someti=hing
         static void Main(string[] args)
         {
+            List<Stop.stop_t> allstops = new List<Stop.stop_t>();   //list of stops
+            
             // You have to use one or the other:
             //Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/TripUpdate.pb");
             Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/VehiclePosition.pb");
@@ -60,13 +62,25 @@ namespace transit_test
                             {
                                 Console.WriteLine("The name of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_name + "\"");
 
+                              
+
+
+                                var cd = new Stop.stop_t();                     //populates list with stops and their info
+                                cd.stop_id = entity.vehicle.stop_id;
+                                cd.stop_name = Stop.stops[entity.vehicle.stop_id].stop_name;
+                                cd.stop_lat = Stop.stops[entity.vehicle.stop_id].stop_lat;
+                                cd.stop_long = Stop.stops[entity.vehicle.stop_id].stop_long;
+                                allstops.Add(cd);
+                                
+                                
+
                                 //for (int i = 0; int < stopNames.count(); i++) {
-                                    //if (stopNames[i] != Stop.stops[entity.vehicle.stop_id].stop_name)
-                                    //{
-                                    //    stopNames[i].StopName = Stop.stops[entity.vehicle.stop_id].stop_name;
-                                    //    stopNames[i].latitude = entity.vehicle.position.latitude;
-                                    //    stopNames[i].longitude = entity.vehicle.position.longitude;
-                                    //}
+                                //if (stopNames[i] != Stop.stops[entity.vehicle.stop_id].stop_name)
+                                //{
+                                //    stopNames[i].StopName = Stop.stops[entity.vehicle.stop_id].stop_name;
+                                //    stopNames[i].latitude = entity.vehicle.position.latitude;
+                                //    stopNames[i].longitude = entity.vehicle.position.longitude;
+                                //}
 
 
                                 Console.WriteLine("The Latitude of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_lat + "\"");
@@ -90,6 +104,18 @@ namespace transit_test
                                         Trip.trip_t trip = Trip.trips[entity.vehicle.trip.trip_id];
                                         foreach (Trip.trip_stops_t stop in trip.tripStops)
                                         {
+                                           // Console.WriteLine(stop.stop_id);      //should print whole trip with names of stops, only prints ID's
+                                            foreach (Stop.stop_t s in allstops)                      
+                                            {
+
+                                                if (stop.stop_id == s.stop_id)      //dosent work correctly
+                                                {
+                                              //      Console.WriteLine(s.stop_name);
+                                                }
+
+                                            }
+
+
                                             if (stop.stop_id == entity.vehicle.stop_id)
                                             {
                                                 Console.WriteLine(".. and is scheduled to arrive there at " + stop.arrive_time);
@@ -104,9 +130,18 @@ namespace transit_test
                     }
                 }
             }
-
+            
+            foreach (Stop.stop_t s in allstops)                      //prints all stops, what to sort by?
+            {
+                
+                    Console.WriteLine(s.stop_id);     
+                    Console.WriteLine(s.stop_name);
+                
+            }
+            
             Console.WriteLine("Press any key to continue");
             Console.ReadLine();
+
         }
     }
 }
