@@ -6,7 +6,7 @@
   <import>
     <widget-library name="../bin/Debug/RTD_UI_Application.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="MainWindow" design-size="772 488">
+  <widget class="Gtk.Window" id="MainWindow" design-size="759 488">
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -48,16 +48,19 @@
         <child>
           <widget class="Gtk.Label" id="dateText">
             <property name="MemberName" />
+            <property name="Xpad">55</property>
             <property name="LabelProp" translatable="yes">Date here</property>
+            <property name="Justify">Center</property>
           </widget>
           <packing>
-            <property name="X">600</property>
+            <property name="X">570</property>
             <property name="Y">20</property>
           </packing>
         </child>
         <child>
           <widget class="Gtk.Label" id="currentTimeText">
             <property name="MemberName" />
+            <property name="Xpad">35</property>
             <property name="LabelProp" translatable="yes">Time here</property>
           </widget>
           <packing>

@@ -63,14 +63,17 @@ public partial class MainWindow
 		// Container child fixed1.Gtk.Fixed+FixedChild
 		this.dateText = new global::Gtk.Label();
 		this.dateText.Name = "dateText";
+		this.dateText.Xpad = 55;
 		this.dateText.LabelProp = global::Mono.Unix.Catalog.GetString("Date here");
+		this.dateText.Justify = ((global::Gtk.Justification)(2));
 		this.fixed1.Add(this.dateText);
 		global::Gtk.Fixed.FixedChild w4 = ((global::Gtk.Fixed.FixedChild)(this.fixed1[this.dateText]));
-		w4.X = 600;
+		w4.X = 570;
 		w4.Y = 20;
 		// Container child fixed1.Gtk.Fixed+FixedChild
 		this.currentTimeText = new global::Gtk.Label();
 		this.currentTimeText.Name = "currentTimeText";
+		this.currentTimeText.Xpad = 35;
 		this.currentTimeText.LabelProp = global::Mono.Unix.Catalog.GetString("Time here");
 		this.fixed1.Add(this.currentTimeText);
 		global::Gtk.Fixed.FixedChild w5 = ((global::Gtk.Fixed.FixedChild)(this.fixed1[this.currentTimeText]));
@@ -119,7 +122,7 @@ public partial class MainWindow
 		{
 			this.Child.ShowAll();
 		}
-		this.DefaultWidth = 772;
+		this.DefaultWidth = 759;
 		this.DefaultHeight = 488;
 		this.Show();
 	}

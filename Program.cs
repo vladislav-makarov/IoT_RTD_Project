@@ -21,7 +21,8 @@ namespace RTD_UI_Application
 
             Application.Init();
             MainWindow win = new MainWindow();
-            win.Title = "RTD Trip Planner (v1.0.0)";
+            win.Title = "RTD Bus Trip Planner";
+            win.ModifyBg(Gtk.StateType.Normal, new Gdk.Color(255, 255, 255));
             //win.Resizable = false;
             win.Show();
             Application.Run();
