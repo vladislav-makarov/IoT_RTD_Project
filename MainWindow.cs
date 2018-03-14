@@ -4,7 +4,7 @@ using Pango;
 using ProtoBuf;
 using transit_realtime;
 using System.Collections.Generic;
-
+using GoogleMaps.LocationServices;
 using RTD_UI_Application;
 
 /** Author: Vlad Makarov **/
@@ -13,9 +13,13 @@ public partial class MainWindow : Gtk.Window
     public static List<Stop.stop_t> allStops, allDestinations;
     public FontDescription smallFontStyle, mediumFontStyle, mediumBoldFontStyle, bigFontStyle, bigBoldFontStyle, extraBigBoldFontStyle;
     public String userName = "John Smith";
-    public String userLocation = "Lawrence Street Center, 1380 Lawrence St, Denver, CO 80204";
+    public String userLocation;
     public String userLocationText = "Your current location is:";
     public String helloText;
+    private GoogleLocationService service = new GoogleLocationService();
+	private double latitude = 39.746025;
+	private double longitude = -104.999083;
+
 
     public MainWindow() : base(Gtk.WindowType.Toplevel)
     {
@@ -30,7 +34,9 @@ public partial class MainWindow : Gtk.Window
         setLabelTextWithStyle(this.helloLabel, helloText, extraBigBoldFontStyle);
         helloLabel.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(75, 0, 130));
         setLabelTextWithStyle(this.currentLocationText, userLocationText, mediumBoldFontStyle);
-        setLabelTextWithStyle(this.currentLocationAddress, userLocation, mediumFontStyle);
+
+        // Get user location and update current location text
+        setLabelTextWithStyle(this.currentLocationAddress, getUserLocationFromLatLong(), mediumFontStyle);
 
         // Set up and show current date and time
         showDateAndTime();
@@ -133,4 +139,28 @@ public partial class MainWindow : Gtk.Window
         this.destinationText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(204, 0, 0));
         this.startAtTextNote.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
     }
+
+    public String getUserLocationFromLatLong()
+	{
+        // convert lat, long to physical address and return it
+        String result = service.GetAddressFromLatLang(latitude, longitude).ToString();
+
+        //userLocation = "Lawrence Street Center Denver";
+        //String result = "lat: " + service.GetLatLongFromAddress(userLocation).Latitude.ToString() + ", long: " + service.GetLatLongFromAddress(userLocation).Longitude.ToString();
+        //Console.WriteLine("result:  ****   " + result)
+
+        return result;
+	}
+
+	//takes: String address, returns: double latitude
+	public double getUserLatitudeFromLocation(String userLocation)
+	{
+		return service.GetLatLongFromAddress(userLocation).Latitude;
+	}
+
+	//takes: String address, returns: double longitude
+	public double getUserLongitudeFromLocation(String userLocation)
+	{
+        return service.GetLatLongFromAddress(userLocation).Longitude;
+	}
 }
