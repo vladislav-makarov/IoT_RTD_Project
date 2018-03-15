@@ -36,12 +36,12 @@ public partial class MainWindow : Gtk.Window
         setUpFonts();
 
         // Set labels
-        setLabelTextWithStyle(this.helloLabel, helloText, extraBigBoldFontStyle);
+        setLabelTextWithStyle(helloLabel, helloText, extraBigBoldFontStyle);
         helloLabel.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(75, 0, 130));
-        setLabelTextWithStyle(this.currentLocationText, userLocationText, mediumBoldFontStyle);
+        setLabelTextWithStyle(currentLocationText, userLocationText, mediumBoldFontStyle);
 
         // Get user location and update current location text
-        setLabelTextWithStyle(this.currentLocationAddress, getUserLocationFromLatLong(), mediumFontStyle);
+        setLabelTextWithStyle(currentLocationAddress, getUserLocationFromLatLong(), mediumFontStyle);
 
         // Set up and show current date and time
         showDateAndTime();
@@ -102,33 +102,46 @@ public partial class MainWindow : Gtk.Window
 
     public void showDateAndTime()
     {
-        setLabelTextWithStyle(this.dateText, DateTime.Now.ToString("dddd, MMMM dd"), bigFontStyle);
-        setLabelTextWithStyle(this.currentTimeText, DateTime.Now.ToString("hh:mm tt"), extraBigBoldFontStyle);
-        this.dateText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
-        this.currentTimeText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
+        setLabelTextWithStyle(dateText, DateTime.Now.ToString("dddd, MMMM dd"), bigFontStyle);
+        setLabelTextWithStyle(currentTimeText, DateTime.Now.ToString("hh:mm tt"), extraBigBoldFontStyle);
+        dateText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
+        currentTimeText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
+
+		// Update date and time every 30 seconds
+        System.Threading.Timer timer = new System.Threading.Timer((e) =>
+		{
+			updateDateAndTime();
+        }, null, TimeSpan.Zero, TimeSpan.FromMinutes(0.5));
+    }
+
+    public void updateDateAndTime() {
+		setLabelTextWithStyle(dateText, DateTime.Now.ToString("dddd, MMMM dd"), bigFontStyle);
+		setLabelTextWithStyle(currentTimeText, DateTime.Now.ToString("hh:mm tt"), extraBigBoldFontStyle);
     }
 
     public void setUpStartLocationBox()
     {
-        this.startBox.Name = "startAtBox";
-        this.startBox.SetSizeRequest(600, 30);
+        startBox.Name = "startAtBox";
+        startBox.TooltipText = "Please selection your Starting Location (RTD Stop)";
+        startBox.SetSizeRequest(600, 30);
         allStops = Program.returnAllBusStops();
 
         int i = 0;
         foreach (Stop.stop_t s in allStops)
         {
             //Console.WriteLine(s.stop_name);
-            this.startBox.InsertText(i, s.stop_name);
+            startBox.InsertText(i, s.stop_name);
             i++;
         }
 
-        this.startBox.Changed += new EventHandler(onComboBoxChanged);
+        startBox.Changed += new EventHandler(onComboBoxChanged);
     }
 
     public void setUpDestinationLocationBox()
     {
-        this.destinationBox.Name = "destinationBox";
-        this.destinationBox.SetSizeRequest(600, 30);
+        destinationBox.Name = "destinationBox";
+        destinationBox.TooltipText = "Please selection your Destination (RTD Stop)";
+        destinationBox.SetSizeRequest(600, 30);
         allDestinations = allStops;
         //allDestinations = Program.returnAllBusStops();
 
@@ -136,30 +149,29 @@ public partial class MainWindow : Gtk.Window
         foreach (Stop.stop_t s in allDestinations)
         {
             //Console.WriteLine(s.stop_name);
-            this.destinationBox.InsertText(i, s.stop_name);
+            destinationBox.InsertText(i, s.stop_name);
             i++;
         }
 
-        this.destinationBox.Changed += new EventHandler(onComboBoxChanged);
+        destinationBox.Changed += new EventHandler(onComboBoxChanged);
     }
 
     public void setUpStartAndDestinationText()
     {
-        setLabelTextWithStyle(this.startAtText, "Start at", bigBoldFontStyle);
-        setLabelTextWithStyle(this.destinationText, "Destination", bigBoldFontStyle);
-        setLabelTextWithStyle(this.startAtTextNote, "  displaying\nclosest to you", smallFontStyle);
+        setLabelTextWithStyle(startAtText, "Start at", bigBoldFontStyle);
+        setLabelTextWithStyle(destinationText, "Destination", bigBoldFontStyle);
+        setLabelTextWithStyle(startAtTextNote, "  displaying\nclosest to you", smallFontStyle);
 
         // Set color to text 
-        this.startAtText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(0, 204, 102));
-        this.destinationText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(204, 0, 0));
-        this.startAtTextNote.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
+        startAtText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(0, 204, 102));
+        destinationText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(204, 0, 0));
+        startAtTextNote.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
     }
 
     public String getUserLocationFromLatLong()
 	{
         // convert lat, long to physical address and return it
         String result = service.GetAddressFromLatLang(latitude, longitude).ToString();
-
         //userLocation = "Lawrence Street Center Denver";
         //String result = "lat: " + service.GetLatLongFromAddress(userLocation).Latitude.ToString() + ", long: " + service.GetLatLongFromAddress(userLocation).Longitude.ToString();
         //Console.WriteLine("result:  ****   " + result)
@@ -180,15 +192,17 @@ public partial class MainWindow : Gtk.Window
 	}
 
     public void setUpGoButton() {
-        this.goButton.ModifyFont(bigFontStyle);
-        this.goButton.Clicked += new EventHandler(goButtonClicked);
+        //goButton.ModifyFont(bigFontStyle);
+        goButton.TooltipText = "Show trip details for Selected Trip";
+        goButton.Clicked += new EventHandler(goButtonClicked);
     }
 
     public void setGoButtonVisible(Boolean visible) {
         if (visible) {
-            this.goButton.Show();
-        } else {
-            this.goButton.Hide();
+            goButton.Show();
+        } 
+        else {
+            goButton.Hide();
         }
         
     }

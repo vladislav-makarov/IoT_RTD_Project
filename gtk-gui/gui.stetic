@@ -12,7 +12,7 @@
     <property name="WindowPosition">CenterOnParent</property>
     <property name="BorderWidth">3</property>
     <child>
-      <widget class="Gtk.Fixed" id="fixed1">
+      <widget class="Gtk.Fixed" id="mainWindow">
         <property name="MemberName" />
         <property name="HasWindow">False</property>
         <child>
@@ -123,7 +123,7 @@
         <child>
           <widget class="Gtk.Button" id="goButton">
             <property name="MemberName" />
-            <property name="WidthRequest">100</property>
+            <property name="WidthRequest">120</property>
             <property name="CanFocus">True</property>
             <property name="Type">TextOnly</property>
             <property name="Label" translatable="yes">Go!</property>
@@ -131,8 +131,8 @@
             <property name="BorderWidth">1</property>
           </widget>
           <packing>
-            <property name="X">328</property>
-            <property name="Y">343</property>
+            <property name="X">340</property>
+            <property name="Y">300</property>
           </packing>
         </child>
       </widget>
