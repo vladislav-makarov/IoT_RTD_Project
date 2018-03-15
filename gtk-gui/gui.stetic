@@ -120,6 +120,21 @@
             <property name="Y">132</property>
           </packing>
         </child>
+        <child>
+          <widget class="Gtk.Button" id="goButton">
+            <property name="MemberName" />
+            <property name="WidthRequest">100</property>
+            <property name="CanFocus">True</property>
+            <property name="Type">TextOnly</property>
+            <property name="Label" translatable="yes">Go!</property>
+            <property name="UseUnderline">True</property>
+            <property name="BorderWidth">1</property>
+          </widget>
+          <packing>
+            <property name="X">328</property>
+            <property name="Y">343</property>
+          </packing>
+        </child>
       </widget>
     </child>
   </widget>

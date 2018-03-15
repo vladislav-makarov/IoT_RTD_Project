@@ -11,14 +11,18 @@ using RTD_UI_Application;
 public partial class MainWindow : Gtk.Window
 {
     public static List<Stop.stop_t> allStops, allDestinations;
-    public FontDescription smallFontStyle, mediumFontStyle, mediumBoldFontStyle, bigFontStyle, bigBoldFontStyle, extraBigBoldFontStyle;
+	public static String userSelectedStartLocation;           // holds user selected Start location
+	public static String userSelectedDestinationLocation;     // holds user selected Destination location
+	public FontDescription smallFontStyle, mediumFontStyle, mediumBoldFontStyle, bigFontStyle, bigBoldFontStyle, extraBigBoldFontStyle;
     public String userName = "John Smith";
     public String userLocation;
     public String userLocationText = "Your current location is:";
     public String helloText;
+    public Boolean goButtonVisible;
+    public Boolean startPointSelected, destinationSelected;
     private GoogleLocationService service = new GoogleLocationService();
-	private double latitude = 39.746025;
-	private double longitude = -104.999083;
+    private double latitude = 39.746025;
+    private double longitude = -104.999083;
 
 
     public MainWindow() : base(Gtk.WindowType.Toplevel)
@@ -48,14 +52,18 @@ public partial class MainWindow : Gtk.Window
         // Set up start and destination location combo boxes
         setUpStartLocationBox();
         setUpDestinationLocationBox();
+
+        // Set up Go button
+        setUpGoButton();
+        setGoButtonVisible(goButtonVisible);
     }
 
     public void setUpFonts()
     {
-		smallFontStyle = new FontDescription();
-		smallFontStyle.Family = "Arial";
+        smallFontStyle = new FontDescription();
+        smallFontStyle.Family = "Arial";
         smallFontStyle.Weight = Pango.Weight.Ultralight;
-		smallFontStyle.Size = Convert.ToInt32(9 * Pango.Scale.PangoScale);
+        smallFontStyle.Size = Convert.ToInt32(9 * Pango.Scale.PangoScale);
 
         mediumFontStyle = new FontDescription();
         mediumFontStyle.Family = "Arial";
@@ -77,10 +85,10 @@ public partial class MainWindow : Gtk.Window
         bigBoldFontStyle.Weight = Pango.Weight.Bold;
         bigBoldFontStyle.Size = Convert.ToInt32(16 * Pango.Scale.PangoScale);
 
-		extraBigBoldFontStyle = new FontDescription();
-		extraBigBoldFontStyle.Family = "Arial";
+        extraBigBoldFontStyle = new FontDescription();
+        extraBigBoldFontStyle.Family = "Arial";
         extraBigBoldFontStyle.Weight = Pango.Weight.Semibold;
-		extraBigBoldFontStyle.Size = Convert.ToInt32(20 * Pango.Scale.PangoScale);
+        extraBigBoldFontStyle.Size = Convert.ToInt32(20 * Pango.Scale.PangoScale);
     }
 
     public void setLabelTextWithStyle(Gtk.Label label, String text, FontDescription style)
@@ -102,31 +110,37 @@ public partial class MainWindow : Gtk.Window
 
     public void setUpStartLocationBox()
     {
+        this.startBox.Name = "startAtBox";
         this.startBox.SetSizeRequest(600, 30);
         allStops = Program.returnAllBusStops();
-       
+
         int i = 0;
         foreach (Stop.stop_t s in allStops)
         {
             //Console.WriteLine(s.stop_name);
             this.startBox.InsertText(i, s.stop_name);
-            i++;      
+            i++;
         }
+
+        this.startBox.Changed += new EventHandler(onComboBoxChanged);
     }
 
     public void setUpDestinationLocationBox()
     {
+        this.destinationBox.Name = "destinationBox";
         this.destinationBox.SetSizeRequest(600, 30);
         allDestinations = allStops;
-		//allDestinations = Program.returnAllBusStops();
+        //allDestinations = Program.returnAllBusStops();
 
-		int i = 0;
-		foreach (Stop.stop_t s in allDestinations)
-		{
+        int i = 0;
+        foreach (Stop.stop_t s in allDestinations)
+        {
             //Console.WriteLine(s.stop_name);
             this.destinationBox.InsertText(i, s.stop_name);
-			i++;
-		}
+            i++;
+        }
+
+        this.destinationBox.Changed += new EventHandler(onComboBoxChanged);
     }
 
     public void setUpStartAndDestinationText()
@@ -153,15 +167,62 @@ public partial class MainWindow : Gtk.Window
         return result;
 	}
 
-	//takes: String address, returns: double latitude
+	/* Takes: String address, returns: double latitude */
 	public double getUserLatitudeFromLocation(String userLocation)
 	{
 		return service.GetLatLongFromAddress(userLocation).Latitude;
 	}
 
-	//takes: String address, returns: double longitude
+	/* Takes: String address, returns: double longitude */
 	public double getUserLongitudeFromLocation(String userLocation)
 	{
         return service.GetLatLongFromAddress(userLocation).Longitude;
+	}
+
+    public void setUpGoButton() {
+        this.goButton.ModifyFont(bigFontStyle);
+        this.goButton.Clicked += new EventHandler(goButtonClicked);
+    }
+
+    public void setGoButtonVisible(Boolean visible) {
+        if (visible) {
+            this.goButton.Show();
+        } else {
+            this.goButton.Hide();
+        }
+        
+    }
+
+	public void goButtonClicked(object obj, EventArgs args)
+	{
+		Console.WriteLine("Go Button Clicked");
+	}
+
+    public void onComboBoxChanged(object o, EventArgs args)
+	{
+        Gtk.ComboBox combo = o as Gtk.ComboBox;
+		if (o == null)
+			return;
+
+        Gtk.TreeIter iter;
+
+        if (combo.GetActiveIter(out iter))
+        {
+            if (combo.Name == "startAtBox")
+            {
+                userSelectedStartLocation = (string)combo.Model.GetValue(iter, 0);
+                startPointSelected = true;
+                Console.WriteLine("*** Start Location selected: " + userSelectedStartLocation);
+            } 
+            else if (combo.Name == "destinationBox") 
+            {
+                userSelectedDestinationLocation = (string)combo.Model.GetValue(iter, 0);
+                destinationSelected = true;
+                Console.WriteLine("*** Destination Location selected: " + userSelectedDestinationLocation);
+            }
+
+            // update Go button visibility
+            setGoButtonVisible(startPointSelected && destinationSelected);
+        }
 	}
 }

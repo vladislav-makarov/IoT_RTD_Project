@@ -25,6 +25,8 @@ public partial class MainWindow
 
 	private global::Gtk.Label startAtTextNote;
 
+	private global::Gtk.Button goButton;
+
 	protected virtual void Build()
 	{
 		global::Stetic.Gui.Initialize(this);
@@ -35,6 +37,7 @@ public partial class MainWindow
 		this.BorderWidth = ((uint)(3));
 		// Container child MainWindow.Gtk.Container+ContainerChild
 		this.fixed1 = new global::Gtk.Fixed();
+		this.fixed1.Name = "fixed1";
 		this.fixed1.HasWindow = false;
 		// Container child fixed1.Gtk.Fixed+FixedChild
 		this.helloLabel = new global::Gtk.Label();
@@ -117,6 +120,18 @@ public partial class MainWindow
 		global::Gtk.Fixed.FixedChild w10 = ((global::Gtk.Fixed.FixedChild)(this.fixed1[this.startAtTextNote]));
 		w10.X = 100;
 		w10.Y = 132;
+		// Container child fixed1.Gtk.Fixed+FixedChild
+		this.goButton = new global::Gtk.Button();
+		this.goButton.WidthRequest = 100;
+		this.goButton.CanFocus = true;
+		this.goButton.Name = "goButton";
+		this.goButton.UseUnderline = true;
+		this.goButton.BorderWidth = ((uint)(1));
+		this.goButton.Label = global::Mono.Unix.Catalog.GetString("Go!");
+		this.fixed1.Add(this.goButton);
+		global::Gtk.Fixed.FixedChild w11 = ((global::Gtk.Fixed.FixedChild)(this.fixed1[this.goButton]));
+		w11.X = 328;
+		w11.Y = 343;
 		this.Add(this.fixed1);
 		if ((this.Child != null))
 		{
