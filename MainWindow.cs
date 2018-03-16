@@ -5,6 +5,8 @@ using ProtoBuf;
 using transit_realtime;
 using System.Collections.Generic;
 using GoogleMaps.LocationServices;
+using System.Diagnostics;
+
 using RTD_UI_Application;
 
 /** Author: Vlad Makarov **/
@@ -14,7 +16,7 @@ public partial class MainWindow : Gtk.Window
 	public static String userSelectedStartLocation;           // holds user selected Start location
 	public static String userSelectedDestinationLocation;     // holds user selected Destination location
 	public FontDescription smallFontStyle, mediumFontStyle, mediumBoldFontStyle, bigFontStyle, bigBoldFontStyle, extraBigBoldFontStyle;
-    public String userName = "John Smith";
+    public String userFullName = "";
     public String userLocation;
     public String userLocationText = "Your current location is:";
     public String helloText;
@@ -29,10 +31,8 @@ public partial class MainWindow : Gtk.Window
     {
         Build();
 
-        userName = Environment.UserName;
-        helloText = "Hello, " + userName + "!";
-
-        // Set up fonts
+        // Set up username and fonts
+        setUpUserName();
         setUpFonts();
 
         // Set labels
@@ -56,6 +56,16 @@ public partial class MainWindow : Gtk.Window
         // Set up Go button
         setUpGoButton();
         setGoButtonVisible(goButtonVisible);
+
+        // Distance calculation usage example
+        double result = distance(32.9697, -96.80322, 29.46786, -98.53506, 'M');
+        Console.WriteLine("distance: " + result.ToString());
+    }
+
+    public void setUpUserName()
+    {
+        userFullName = Bash("dscl . -read /Users/" + Environment.UserName + " RealName");
+        helloText = "Hello," + userFullName + "!";
     }
 
     public void setUpFonts()
@@ -198,18 +208,15 @@ public partial class MainWindow : Gtk.Window
     }
 
     public void setGoButtonVisible(Boolean visible) {
-        if (visible) {
-            goButton.Show();
-        } 
-        else {
-            goButton.Hide();
-        }
-        
+        goButton.Sensitive = visible;
     }
 
 	public void goButtonClicked(object obj, EventArgs args)
 	{
 		Console.WriteLine("Go Button Clicked");
+
+        // TODO: Code for testing, remove later
+        searchComboBoxFor(allStops, "Colfax Station");
 	}
 
     public void onComboBoxChanged(object o, EventArgs args)
@@ -239,4 +246,88 @@ public partial class MainWindow : Gtk.Window
             setGoButtonVisible(startPointSelected && destinationSelected);
         }
 	}
+
+    /* Performs search on combo box contents for desired stop name (value) */
+    public void searchComboBoxFor(List<Stop.stop_t> comboBoxContents, string searchValue) {
+		int i = 0;
+		foreach (Stop.stop_t s in comboBoxContents)
+		{
+            if (s.stop_name == searchValue) 
+            {
+                String latitude = (s.stop_lat).ToString();
+                String longitude = (s.stop_long).ToString();
+                Console.WriteLine("latitude: " + latitude);
+                Console.WriteLine("longitude: " + longitude);
+
+            }
+            //Console.WriteLine(s.stop_name);
+			//destinationBox.InsertText(i, s.stop_name);
+			i++;
+		}
+    }
+
+     public string Bash(string cmd)
+     {
+            var escapedArgs = cmd.Replace("\"", "\\\"");
+            
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = $"-c \"{escapedArgs}\"",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+            process.Start();
+    		string result = null;
+    		while (!process.StandardOutput.EndOfStream)
+    		{
+    			result = process.StandardOutput.ReadLine();
+    		}
+            process.WaitForExit();
+            return result;
+    }
+
+	/* 
+	 * Calculates distance between two (latitude,longitude) points
+	 * Units: Pass 'K' for kilometers, 'M' for miles (char)
+     * -> Usage examples:
+     *  distance(32.9697, -96.80322, 29.46786, -98.53506, 'M');
+     *  Console.WriteLine(distance(32.9697, -96.80322, 29.46786, -98.53506, 'K'));
+     *  Console.WriteLine(distance(32.9697, -96.80322, 29.46786, -98.53506, 'M'));
+     */
+	public static double distance(double lat1, double lon1, double lat2, double lon2, char unit)
+	{
+		double theta = lon1 - lon2;
+		double dist = Math.Sin(deg2rad(lat1)) * Math.Sin(deg2rad(lat2)) + Math.Cos(deg2rad(lat1)) * Math.Cos(deg2rad(lat2)) * Math.Cos(deg2rad(theta));
+		dist = Math.Acos(dist);
+		dist = rad2deg(dist);
+		dist = dist * 60 * 1.1515;
+		if (unit == 'K')
+		{
+			dist = dist * 1.609344;
+		}
+		else if (unit == 'M')
+		{
+			dist = dist * 0.8684;
+        } 
+        else {
+            return 0;       // units not recognized, return 0
+       }
+		return dist;
+	}
+
+	public static double deg2rad(double deg)
+	{
+		return (deg * Math.PI / 180.0);
+	}
+
+	public static double rad2deg(double rad)
+	{
+		return (rad / Math.PI * 180.0);
+	}
+
 }

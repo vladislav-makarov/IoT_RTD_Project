@@ -42,3 +42,5 @@
 /Users/vmakarov/IoT_RTD_Project/bin/Debug/XPlat.Core.xml
 /Users/vmakarov/IoT_RTD_Project/bin/Debug/Geolocation.dll
 /Users/vmakarov/IoT_RTD_Project/bin/Debug/Geolocation.pdb
+/Users/vmakarov/IoT_RTD_Project/bin/Debug/Smartersoft.ExtendedPrincipals.dll
+/Users/vmakarov/IoT_RTD_Project/bin/Debug/Smartersoft.ExtendedPrincipals.xml

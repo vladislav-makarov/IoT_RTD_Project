@@ -37,6 +37,8 @@ public partial class MainWindow
 		this.BorderWidth = ((uint)(3));
 		// Container child MainWindow.Gtk.Container+ContainerChild
 		this.mainWindow = new global::Gtk.Fixed();
+		this.mainWindow.WidthRequest = 790;
+		this.mainWindow.HeightRequest = 430;
 		this.mainWindow.Name = "mainWindow";
 		this.mainWindow.HasWindow = false;
 		// Container child mainWindow.Gtk.Fixed+FixedChild
@@ -137,7 +139,7 @@ public partial class MainWindow
 		{
 			this.Child.ShowAll();
 		}
-		this.DefaultWidth = 759;
+		this.DefaultWidth = 806;
 		this.DefaultHeight = 488;
 		this.Show();
 	}

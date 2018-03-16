@@ -6,7 +6,7 @@
   <import>
     <widget-library name="../bin/Debug/RTD_UI_Application.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="MainWindow" design-size="759 488">
+  <widget class="Gtk.Window" id="MainWindow" design-size="806 488">
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -14,6 +14,8 @@
     <child>
       <widget class="Gtk.Fixed" id="mainWindow">
         <property name="MemberName" />
+        <property name="WidthRequest">790</property>
+        <property name="HeightRequest">430</property>
         <property name="HasWindow">False</property>
         <child>
           <widget class="Gtk.Label" id="helloLabel">

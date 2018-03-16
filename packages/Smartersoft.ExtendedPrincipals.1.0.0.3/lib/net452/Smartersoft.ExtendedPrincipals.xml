@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Smartersoft.ExtendedPrincipals</name>
+    </assembly>
+    <members>
+        <member name="T:Smartersoft.ExtendedPrincipals.MemberOfFilter">
+            <summary>
+            Member Of Filter used in ExtendedUserPrincipal
+            </summary>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.MemberOfFilter.#ctor(System.DirectoryServices.AccountManagement.Principal)">
+            <summary>
+            Create a new memberof filter.
+            </summary>
+            <param name="principal">The principal the filter is used for.</param>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.MemberOfFilter.MemberOf(System.DirectoryServices.AccountManagement.GroupPrincipal)">
+            <summary>
+            Set the filter based on groupPrincipal.
+            </summary>
+            <param name="groupPrincipal">The Group Principal used for the filter.</param>
+        </member>
+        <member name="T:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal">
+            <summary>
+            Encapsulates principals that are user accounts and extends these with extra properties.
+            </summary>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.#ctor(System.DirectoryServices.AccountManagement.PrincipalContext)">
+            <summary>
+            Initializes a new instance of the Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal
+            class by using the specified context.
+            </summary>
+            <param name="context">The System.DirectoryServices.AccountManagement.PrincipalContext that specifies the server or domain against which operations are performed.</param>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.#ctor(System.DirectoryServices.AccountManagement.PrincipalContext,System.String,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the System.DirectoryServices.AccountManagement.UserPrincipal
+            class by using the specified context, SAM account name, password, and enabled value.
+            </summary>
+            <param name="context">The System.DirectoryServices.AccountManagement.PrincipalContext that specifies the server or domain against which operations are performed.</param>
+            <param name="samAccountName">The SAM account name for this user principal.</param>
+            <param name="password">The password for this account.</param>
+            <param name="enabled">A Boolean value that specifies whether the account is enabled.</param>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.FindByIdentity(System.DirectoryServices.AccountManagement.PrincipalContext,System.String)">
+            <summary>
+            Returns an ExtendedUserPrincipal object that matches the specified identity value.
+            </summary>
+            <param name="context">The System.DirectoryServices.AccountManagement.PrincipalContext that specifies the server or domain against which operations are performed.</param>
+            <param name="identityValue"> The identity of the principal. This parameter can be any format that is contained in the System.DirectoryServices.AccountManagement.IdentityType enumeration.</param>
+            <returns>A Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal object that matches the specified identity value, or null if no matches are found.</returns>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.FindByEmail(System.DirectoryServices.AccountManagement.PrincipalContext,System.String)">
+            <summary>
+            Returns an ExtendedUserPrincipal object that matches the specified emailaddress.
+            </summary>
+            <param name="context">The System.DirectoryServices.AccountManagement.PrincipalContext that specifies the server or domain against which operations are performed.</param>
+            <param name="emailaddress">The emailaddres of the user.</param>
+            <returns>A Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal object that matches the specified identity value, or null if no matches are found.</returns>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.Changed">
+            <summary>
+            Last modified date
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.Company">
+            <summary>
+            Company of the user
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.Created">
+            <summary>
+            Creation date
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.Department">
+            <summary>
+            Department of the user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.HomePhone">
+            <summary>
+            HomePhone of the user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.Initials">
+            <summary>
+            Initials of the user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.ManagerDN">
+            <summary>
+            Manager of the user, (as DN remember that when setting this value)
+            </summary>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.GetManager">
+            <summary>
+            Get the manager of the user.
+            </summary>
+            <returns>A Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal object that matches the specified Manager DN, or null if no manager has been set.</returns>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.Mobile">
+            <summary>
+            Mobile number of the user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.Office">
+            <summary>
+            Office of the user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.PersonalTitle">
+            <summary>
+            Personal title of the user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.ProfilePath">
+            <summary>
+            Profile path of the user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.ProxyAddresses">
+            <summary>
+            Proxy addresses of user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.State">
+            <summary>
+            State of user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.TelephoneNumber">
+            <summary>
+            Phone number of user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.Title">
+            <summary>
+            Title of user.
+            </summary>
+        </member>
+        <member name="P:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.MemberOfFilter">
+            <summary>
+            You could use this filter to create a PrincipalSearcher based on groupname.
+            </summary>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.GetArrayForAttribute(System.String)">
+            <summary>
+            Get a string array value for an attribute.
+            </summary>
+            <param name="attribute">The name of the property in the backing object</param>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.GetStringForAttribute(System.String)">
+            <summary>
+            Get the string value for an attribute
+            </summary>
+            <param name="attribute">The name of the property in the backing object</param>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.SetAttribute(System.String,System.Object)">
+            <summary>
+            Set an attribute of the backing object
+            </summary>
+            <param name="attribute">The name of the property in the backing object</param>
+            <param name="value">New value of the property</param>
+            <remarks>This is UNCHECKED so just with caution!</remarks>
+        </member>
+        <member name="M:Smartersoft.ExtendedPrincipals.ExtendedUserPrincipal.SetAttributeWithString(System.String,System.String)">
+            <summary>
+            Set an attribute with a string value
+            </summary>
+            <param name="attribute">The name of the property in the backing object</param>
+            <param name="value">New value of the property</param>
+        </member>
+    </members>
+</doc>

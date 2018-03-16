@@ -80,6 +80,9 @@
     <Reference Include="Geolocation">
       <HintPath>packages\Geolocation.1.1.1\lib\Geolocation.dll</HintPath>
     </Reference>
+    <Reference Include="Smartersoft.ExtendedPrincipals">
+      <HintPath>packages\Smartersoft.ExtendedPrincipals.1.0.0.3\lib\net452\Smartersoft.ExtendedPrincipals.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">

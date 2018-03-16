@@ -9,7 +9,7 @@ namespace RTD_UI_Application
 		{
 			public string stop_id;
 			public string stop_name;
-			public string stop_lat;
+            public string stop_lat;
 			public string stop_long;
 			public bool wheelchair_access;
 		}
@@ -43,8 +43,8 @@ namespace RTD_UI_Application
 				stop_t thisStop = new stop_t { };
 				thisStop.stop_id = row[STOP_STOP_ID];
 				thisStop.stop_name = row[STOP_NAME];
-				thisStop.stop_lat = row[STOP_LAT];
-				thisStop.stop_long = row[STOP_LONG];
+                thisStop.stop_lat = row[STOP_LAT];
+                thisStop.stop_long = row[STOP_LONG];
 				if (row[STOP_WHEELCHAIR] == "1")
 				{
 					thisStop.wheelchair_access = true;
