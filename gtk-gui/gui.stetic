@@ -7,6 +7,18 @@
     <widget-library name="../bin/Debug/RTD_UI_Application.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="806 488">
+    <action-group name="Default">
+      <action id="AboutOurAppAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">About our App</property>
+        <property name="ShortLabel" translatable="yes">About our App</property>
+      </action>
+      <action id="SettingsAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Settings</property>
+        <property name="ShortLabel" translatable="yes">Settings</property>
+      </action>
+    </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -135,6 +147,30 @@
           <packing>
             <property name="X">340</property>
             <property name="Y">300</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Label" id="tripDistance">
+            <property name="MemberName" />
+            <property name="LabelProp" translatable="yes">Trip distance text here</property>
+          </widget>
+          <packing>
+            <property name="X">270</property>
+            <property name="Y">355</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Calendar" id="calendarWindow">
+            <property name="MemberName" />
+            <property name="WidthRequest">170</property>
+            <property name="Sensitive">False</property>
+            <property name="DisplayOptions">37</property>
+            <property name="ShowDayNames">False</property>
+            <property name="NoMonthChange">True</property>
+          </widget>
+          <packing>
+            <property name="X">615</property>
+            <property name="Y">80</property>
           </packing>
         </child>
       </widget>

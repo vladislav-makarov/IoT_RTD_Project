@@ -20,11 +20,14 @@ public partial class MainWindow : Gtk.Window
     public String userLocation;
     public String userLocationText = "Your current location is:";
     public String helloText;
+    public char setUnits = 'M';
     public Boolean goButtonVisible;
-    public Boolean startPointSelected, destinationSelected;
+    public Boolean startSelected, destinationSelected;
+    public double startLatitude, startLongitude;
+    public double destinationLatitude, destinationLongitude;
     private GoogleLocationService service = new GoogleLocationService();
-    private double latitude = 39.746025;
-    private double longitude = -104.999083;
+    private double userLatitude = 39.746025;
+    private double userLongitude = -104.999083;
 
 
     public MainWindow() : base(Gtk.WindowType.Toplevel)
@@ -58,8 +61,8 @@ public partial class MainWindow : Gtk.Window
         setGoButtonVisible(goButtonVisible);
 
         // Distance calculation usage example
-        double result = distance(32.9697, -96.80322, 29.46786, -98.53506, 'M');
-        Console.WriteLine("distance: " + result.ToString());
+        //double result = distance(32.9697, -96.80322, 29.46786, -98.53506, 'M');
+        //Console.WriteLine("distance: " + result.ToString());
     }
 
     public void setUpUserName()
@@ -133,7 +136,7 @@ public partial class MainWindow : Gtk.Window
     {
         startBox.Name = "startAtBox";
         startBox.TooltipText = "Please selection your Starting Location (RTD Stop)";
-        startBox.SetSizeRequest(600, 30);
+        startBox.SetSizeRequest(560, 30);
         allStops = Program.returnAllBusStops();
 
         int i = 0;
@@ -151,7 +154,7 @@ public partial class MainWindow : Gtk.Window
     {
         destinationBox.Name = "destinationBox";
         destinationBox.TooltipText = "Please selection your Destination (RTD Stop)";
-        destinationBox.SetSizeRequest(600, 30);
+        destinationBox.SetSizeRequest(560, 30);
         allDestinations = allStops;
         //allDestinations = Program.returnAllBusStops();
 
@@ -162,6 +165,7 @@ public partial class MainWindow : Gtk.Window
             destinationBox.InsertText(i, s.stop_name);
             i++;
         }
+
 
         destinationBox.Changed += new EventHandler(onComboBoxChanged);
     }
@@ -176,12 +180,14 @@ public partial class MainWindow : Gtk.Window
         startAtText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(0, 204, 102));
         destinationText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(204, 0, 0));
         startAtTextNote.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
+
+        tripDistance.Visible = false;
     }
 
     public String getUserLocationFromLatLong()
 	{
         // convert lat, long to physical address and return it
-        String result = service.GetAddressFromLatLang(latitude, longitude).ToString();
+        String result = service.GetAddressFromLatLang(userLatitude, userLongitude).ToString();
         //userLocation = "Lawrence Street Center Denver";
         //String result = "lat: " + service.GetLatLongFromAddress(userLocation).Latitude.ToString() + ", long: " + service.GetLatLongFromAddress(userLocation).Longitude.ToString();
         //Console.WriteLine("result:  ****   " + result)
@@ -215,8 +221,20 @@ public partial class MainWindow : Gtk.Window
 	{
 		Console.WriteLine("Go Button Clicked");
 
-        // TODO: Code for testing, remove later
-        searchComboBoxFor(allStops, "Colfax Station");
+        // Update latitude and longitude for user selected start location
+        searchComboBoxFor(allStops, userSelectedStartLocation, true);
+
+		// Update latitude and longitude for user selected destination location
+        searchComboBoxFor(allDestinations, userSelectedDestinationLocation, false);
+
+        if (startLatitude != 0 && destinationLatitude != 0) 
+        {
+            double result = distance(startLatitude, startLongitude,
+                     destinationLatitude, destinationLongitude, setUnits);
+            Console.WriteLine("INSIDE goButtonClicked");
+            resetStartDestinationCoordinates();
+            updateTextForTripDistance(result);
+        }
 	}
 
     public void onComboBoxChanged(object o, EventArgs args)
@@ -232,7 +250,7 @@ public partial class MainWindow : Gtk.Window
             if (combo.Name == "startAtBox")
             {
                 userSelectedStartLocation = (string)combo.Model.GetValue(iter, 0);
-                startPointSelected = true;
+                startSelected = true;
                 Console.WriteLine("*** Start Location selected: " + userSelectedStartLocation);
             } 
             else if (combo.Name == "destinationBox") 
@@ -243,21 +261,29 @@ public partial class MainWindow : Gtk.Window
             }
 
             // update Go button visibility
-            setGoButtonVisible(startPointSelected && destinationSelected);
+            setGoButtonVisible(startSelected && destinationSelected);
         }
 	}
 
     /* Performs search on combo box contents for desired stop name (value) */
-    public void searchComboBoxFor(List<Stop.stop_t> comboBoxContents, string searchValue) {
+    public void searchComboBoxFor(List<Stop.stop_t> comboBoxContents, string searchValue, Boolean startBox) {
 		int i = 0;
 		foreach (Stop.stop_t s in comboBoxContents)
 		{
             if (s.stop_name == searchValue) 
             {
-                String latitude = (s.stop_lat).ToString();
-                String longitude = (s.stop_long).ToString();
-                Console.WriteLine("latitude: " + latitude);
-                Console.WriteLine("longitude: " + longitude);
+                if (startBox) {
+                    startLatitude = Convert.ToDouble(s.stop_lat);
+                    startLongitude = Convert.ToDouble(s.stop_long);
+					Console.WriteLine("Start latitude: " + (s.stop_long).ToString());
+					Console.WriteLine("Start longitude: " + (s.stop_long).ToString());
+                }
+                else {
+                    destinationLatitude = Convert.ToDouble(s.stop_lat);
+                    destinationLongitude = Convert.ToDouble(s.stop_long);
+					Console.WriteLine("Destination latitude: " + s.stop_long);
+					Console.WriteLine("Destination longitude: " + s.stop_long);
+                }
 
             }
             //Console.WriteLine(s.stop_name);
@@ -329,5 +355,18 @@ public partial class MainWindow : Gtk.Window
 	{
 		return (rad / Math.PI * 180.0);
 	}
+
+    public void resetStartDestinationCoordinates() {
+        startLatitude = 0;
+        startLongitude = 0;
+		destinationLatitude = 0;
+        destinationLongitude = 0;
+    }
+
+    public void updateTextForTripDistance(double distance) {
+        tripDistance.Visible = true;
+        tripDistance.Text = "Your Trip estimated distance is:  " + distance + " miles";
+        setLabelTextWithStyle(tripDistance, "Your Trip's estimated distance is:   " + distance.ToString("0.0") + " miles",mediumBoldFontStyle);
+    }
 
 }
