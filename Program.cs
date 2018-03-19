@@ -26,6 +26,10 @@ namespace RTD_UI_Application
             //win.Resizable = false;
             win.Show();
             Application.Run();
+
+            // Test your code here
+            //string result = getNextDepartureTimeForStopName("Knox Station");
+            //Console.WriteLine("Next Bus Departures in: " + result);
         }
 
         // Returns all bus stops; gets called from MainWindow.cs
@@ -122,8 +126,57 @@ namespace RTD_UI_Application
 
             return allstops;
         }
-    }
-}
+
+
+		// Takes bus stop name and calculates when next bus leaves
+		static public double getNextDepartureTimeForStopName(string stopname)
+		{
+			Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/TripUpdate.pb");
+			//Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/VehiclePosition.pb");
+			WebRequest myWebRequest = HttpWebRequest.Create(myUri);
+
+			HttpWebRequest myHttpWebRequest = (HttpWebRequest)myWebRequest;
+
+			// This username and password is issued for the IWKS 4120 class. Please DO NOT redistribute.
+			NetworkCredential myNetworkCredential = new NetworkCredential("RTDgtfsRT", "realT!m3Feed");    // insert credentials here
+
+			CredentialCache myCredentialCache = new CredentialCache();
+			myCredentialCache.Add(myUri, "Basic", myNetworkCredential);
+
+			myHttpWebRequest.PreAuthenticate = true;
+			myHttpWebRequest.Credentials = myCredentialCache;
+
+			FeedMessage feed = Serializer.Deserialize<FeedMessage>(myWebRequest.GetResponse().GetResponseStream());
+
+			//  Stop stop_inst = new Stop();
+			Trip trip_inst = new Trip();
+			foreach (FeedEntity entity in feed.entity)
+			{
+				if (entity.trip_update != null)
+				{
+					if (entity.trip_update.vehicle != null)
+					{
+						if (entity.trip_update.vehicle.id != null)
+
+
+							for (int i = 0; i < entity.trip_update.stop_time_update.Count; i++)
+							{
+                            if (Stop.stops[(entity.trip_update.stop_time_update[i]).stop_id].stop_name == stopname)
+								{
+									Console.WriteLine(entity.trip_update.stop_time_update[i].departure.time);
+                                    return entity.trip_update.stop_time_update[i].departure.time;
+                                    //break;
+								}
+							}
+					}
+				}
+			}
+            return 0;   // "no active busses for that stop";
+		}
+
+    }   // End of Program.cs
+} // End of Namespace
+
 
 
 /* Denver RTD Data Formats

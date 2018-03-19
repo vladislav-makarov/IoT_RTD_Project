@@ -37,6 +37,8 @@ public partial class MainWindow
 
 	private global::Gtk.Calendar calendarWindow;
 
+	private global::Gtk.Label nextBusDeparture;
+
 	protected virtual void Build()
 	{
 		global::Stetic.Gui.Initialize(this);
@@ -174,6 +176,14 @@ public partial class MainWindow
 		global::Gtk.Fixed.FixedChild w14 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.calendarWindow]));
 		w14.X = 615;
 		w14.Y = 80;
+		// Container child mainWindow.Gtk.Fixed+FixedChild
+		this.nextBusDeparture = new global::Gtk.Label();
+		this.nextBusDeparture.Name = "nextBusDeparture";
+		this.nextBusDeparture.LabelProp = global::Mono.Unix.Catalog.GetString("Next Bus Departure time text");
+		this.mainWindow.Add(this.nextBusDeparture);
+		global::Gtk.Fixed.FixedChild w15 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.nextBusDeparture]));
+		w15.X = 270;
+		w15.Y = 390;
 		this.Add(this.mainWindow);
 		if ((this.Child != null))
 		{

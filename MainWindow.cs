@@ -182,6 +182,7 @@ public partial class MainWindow : Gtk.Window
         startAtTextNote.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
 
         tripDistance.Visible = false;
+        nextBusDeparture.Visible = false;
     }
 
     public String getUserLocationFromLatLong()
@@ -234,6 +235,7 @@ public partial class MainWindow : Gtk.Window
             Console.WriteLine("INSIDE goButtonClicked");
             resetStartDestinationCoordinates();
             updateTextForTripDistance(result);
+            updateNextBusDepartureTime();
         }
 	}
 
@@ -368,5 +370,27 @@ public partial class MainWindow : Gtk.Window
         tripDistance.Text = "Your Trip estimated distance is:  " + distance + " miles";
         setLabelTextWithStyle(tripDistance, "Your Trip's estimated distance is:   " + distance.ToString("0.0") + " miles",mediumBoldFontStyle);
     }
+
+	public void updateNextBusDepartureTime()
+	{
+        nextBusDeparture.Visible = true;
+        double time = Program.getNextDepartureTimeForStopName(userSelectedStartLocation);
+        if (time > 0) {
+            DateTime estimatedTime = convertUnixTimeStampToDateTime(time);
+			nextBusDeparture.Text = "Next Bus Departure is:  @" + estimatedTime.ToString("hh:mm tt on dddd, MMMM dd");
+			setLabelTextWithStyle(nextBusDeparture, nextBusDeparture.Text, mediumBoldFontStyle);
+        } else {
+			nextBusDeparture.Text = "Next Bus Departure is:  no active busses for that stop";
+			setLabelTextWithStyle(nextBusDeparture, nextBusDeparture.Text, mediumBoldFontStyle);
+        }
+	}
+
+	public static DateTime convertUnixTimeStampToDateTime(double unixTimeStamp)
+	{
+		// Unix timestamp is seconds past epoch
+		System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+		dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+		return dtDateTime;
+	}
 
 }

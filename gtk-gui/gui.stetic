@@ -173,6 +173,16 @@
             <property name="Y">80</property>
           </packing>
         </child>
+        <child>
+          <widget class="Gtk.Label" id="nextBusDeparture">
+            <property name="MemberName" />
+            <property name="LabelProp" translatable="yes">Next Bus Departure time text</property>
+          </widget>
+          <packing>
+            <property name="X">270</property>
+            <property name="Y">390</property>
+          </packing>
+        </child>
       </widget>
     </child>
   </widget>
