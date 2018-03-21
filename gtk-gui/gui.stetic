@@ -183,6 +183,37 @@
             <property name="Y">390</property>
           </packing>
         </child>
+        <child>
+          <widget class="Gtk.RadioButton" id="milesRadioButton">
+            <property name="MemberName" />
+            <property name="CanFocus">True</property>
+            <property name="Label" translatable="yes">Miles</property>
+            <property name="Active">True</property>
+            <property name="DrawIndicator">True</property>
+            <property name="HasLabel">True</property>
+            <property name="UseUnderline">True</property>
+            <property name="Group">distanceUnits</property>
+          </widget>
+          <packing>
+            <property name="X">20</property>
+            <property name="Y">95</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.RadioButton" id="kilometersRadioButton">
+            <property name="MemberName" />
+            <property name="CanFocus">True</property>
+            <property name="Label" translatable="yes">Kilometers</property>
+            <property name="DrawIndicator">True</property>
+            <property name="HasLabel">True</property>
+            <property name="UseUnderline">True</property>
+            <property name="Group">distanceUnits</property>
+          </widget>
+          <packing>
+            <property name="X">90</property>
+            <property name="Y">95</property>
+          </packing>
+        </child>
       </widget>
     </child>
   </widget>

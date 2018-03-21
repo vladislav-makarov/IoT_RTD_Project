@@ -39,6 +39,10 @@ public partial class MainWindow
 
 	private global::Gtk.Label nextBusDeparture;
 
+	private global::Gtk.RadioButton milesRadioButton;
+
+	private global::Gtk.RadioButton kilometersRadioButton;
+
 	protected virtual void Build()
 	{
 		global::Stetic.Gui.Initialize(this);
@@ -184,6 +188,28 @@ public partial class MainWindow
 		global::Gtk.Fixed.FixedChild w15 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.nextBusDeparture]));
 		w15.X = 270;
 		w15.Y = 390;
+		// Container child mainWindow.Gtk.Fixed+FixedChild
+		this.milesRadioButton = new global::Gtk.RadioButton(global::Mono.Unix.Catalog.GetString("Miles"));
+		this.milesRadioButton.CanFocus = true;
+		this.milesRadioButton.Name = "milesRadioButton";
+		this.milesRadioButton.DrawIndicator = true;
+		this.milesRadioButton.UseUnderline = true;
+		this.milesRadioButton.Group = new global::GLib.SList(global::System.IntPtr.Zero);
+		this.mainWindow.Add(this.milesRadioButton);
+		global::Gtk.Fixed.FixedChild w16 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.milesRadioButton]));
+		w16.X = 20;
+		w16.Y = 95;
+		// Container child mainWindow.Gtk.Fixed+FixedChild
+		this.kilometersRadioButton = new global::Gtk.RadioButton(global::Mono.Unix.Catalog.GetString("Kilometers"));
+		this.kilometersRadioButton.CanFocus = true;
+		this.kilometersRadioButton.Name = "kilometersRadioButton";
+		this.kilometersRadioButton.DrawIndicator = true;
+		this.kilometersRadioButton.UseUnderline = true;
+		this.kilometersRadioButton.Group = this.milesRadioButton.Group;
+		this.mainWindow.Add(this.kilometersRadioButton);
+		global::Gtk.Fixed.FixedChild w17 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.kilometersRadioButton]));
+		w17.X = 90;
+		w17.Y = 95;
 		this.Add(this.mainWindow);
 		if ((this.Child != null))
 		{
