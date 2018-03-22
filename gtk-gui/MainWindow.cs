@@ -43,6 +43,8 @@ public partial class MainWindow
 
 	private global::Gtk.RadioButton kilometersRadioButton;
 
+	private global::Gtk.Label estimatedArrival;
+
 	protected virtual void Build()
 	{
 		global::Stetic.Gui.Initialize(this);
@@ -210,6 +212,14 @@ public partial class MainWindow
 		global::Gtk.Fixed.FixedChild w17 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.kilometersRadioButton]));
 		w17.X = 90;
 		w17.Y = 95;
+		// Container child mainWindow.Gtk.Fixed+FixedChild
+		this.estimatedArrival = new global::Gtk.Label();
+		this.estimatedArrival.Name = "estimatedArrival";
+		this.estimatedArrival.LabelProp = global::Mono.Unix.Catalog.GetString("Estimated Arrival time text");
+		this.mainWindow.Add(this.estimatedArrival);
+		global::Gtk.Fixed.FixedChild w18 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.estimatedArrival]));
+		w18.X = 270;
+		w18.Y = 425;
 		this.Add(this.mainWindow);
 		if ((this.Child != null))
 		{

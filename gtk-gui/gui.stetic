@@ -214,6 +214,16 @@
             <property name="Y">95</property>
           </packing>
         </child>
+        <child>
+          <widget class="Gtk.Label" id="estimatedArrival">
+            <property name="MemberName" />
+            <property name="LabelProp" translatable="yes">Estimated Arrival time text</property>
+          </widget>
+          <packing>
+            <property name="X">270</property>
+            <property name="Y">425</property>
+          </packing>
+        </child>
       </widget>
     </child>
   </widget>

@@ -182,6 +182,7 @@ public partial class MainWindow : Gtk.Window
 
         tripDistance.Visible = false;
         nextBusDeparture.Visible = false;
+        estimatedArrival.Visible = false;
     }
 
     public String getUserLocationFromLatLong()
@@ -243,6 +244,7 @@ public partial class MainWindow : Gtk.Window
 
             updateTextForTripDistance(setUnits);
             updateNextBusDepartureTime();
+            updateEstimatedArrivalTime();
         }
     }
 
@@ -425,6 +427,21 @@ public partial class MainWindow : Gtk.Window
         {
             nextBusDeparture.Text = "Next Bus Departure is:  no active busses for that stop";
             setLabelTextWithStyle(nextBusDeparture, nextBusDeparture.Text, mediumBoldFontStyle);
+        }
+    }
+
+    public void updateEstimatedArrivalTime() {
+        estimatedArrival.Visible = true;
+        double eta = Program.getTimeOfArrivalEstimate(userSelectedStartLocation, userSelectedDestinationLocation);
+
+        if (eta > 0) {
+			DateTime estimatedTime = convertUnixTimeStampToDateTime(eta);
+			estimatedArrival.Text = "Estimated Time of Arrival is:  @" + estimatedTime.ToString("hh:mm tt on dddd, MMMM dd");
+			setLabelTextWithStyle(estimatedArrival, estimatedArrival.Text, mediumBoldFontStyle);
+        }
+        else {
+            estimatedArrival.Text = "Estimated Time of Arrival is:  no bus route between these stops";
+            setLabelTextWithStyle(estimatedArrival, estimatedArrival.Text, mediumBoldFontStyle);
         }
     }
 
