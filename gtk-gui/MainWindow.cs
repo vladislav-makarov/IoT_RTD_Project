@@ -45,6 +45,10 @@ public partial class MainWindow
 
 	private global::Gtk.Label estimatedArrival;
 
+	private global::Gtk.Label numberOfStops;
+
+	private global::Gtk.ProgressBar progressbar1;
+
 	protected virtual void Build()
 	{
 		global::Stetic.Gui.Initialize(this);
@@ -169,7 +173,7 @@ public partial class MainWindow
 		this.mainWindow.Add(this.tripDistance);
 		global::Gtk.Fixed.FixedChild w13 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.tripDistance]));
 		w13.X = 270;
-		w13.Y = 355;
+		w13.Y = 360;
 		// Container child mainWindow.Gtk.Fixed+FixedChild
 		this.calendarWindow = new global::Gtk.Calendar();
 		this.calendarWindow.WidthRequest = 170;
@@ -189,7 +193,7 @@ public partial class MainWindow
 		this.mainWindow.Add(this.nextBusDeparture);
 		global::Gtk.Fixed.FixedChild w15 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.nextBusDeparture]));
 		w15.X = 270;
-		w15.Y = 390;
+		w15.Y = 385;
 		// Container child mainWindow.Gtk.Fixed+FixedChild
 		this.milesRadioButton = new global::Gtk.RadioButton(global::Mono.Unix.Catalog.GetString("Miles"));
 		this.milesRadioButton.CanFocus = true;
@@ -219,7 +223,22 @@ public partial class MainWindow
 		this.mainWindow.Add(this.estimatedArrival);
 		global::Gtk.Fixed.FixedChild w18 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.estimatedArrival]));
 		w18.X = 270;
-		w18.Y = 425;
+		w18.Y = 410;
+		// Container child mainWindow.Gtk.Fixed+FixedChild
+		this.numberOfStops = new global::Gtk.Label();
+		this.numberOfStops.Name = "numberOfStops";
+		this.numberOfStops.LabelProp = global::Mono.Unix.Catalog.GetString("Number of Stops text");
+		this.mainWindow.Add(this.numberOfStops);
+		global::Gtk.Fixed.FixedChild w19 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.numberOfStops]));
+		w19.X = 270;
+		w19.Y = 435;
+		// Container child mainWindow.Gtk.Fixed+FixedChild
+		this.progressbar1 = new global::Gtk.ProgressBar();
+		this.progressbar1.Name = "progressbar1";
+		this.mainWindow.Add(this.progressbar1);
+		global::Gtk.Fixed.FixedChild w20 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.progressbar1]));
+		w20.X = 324;
+		w20.Y = 332;
 		this.Add(this.mainWindow);
 		if ((this.Child != null))
 		{

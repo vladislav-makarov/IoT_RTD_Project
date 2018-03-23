@@ -156,7 +156,7 @@
           </widget>
           <packing>
             <property name="X">270</property>
-            <property name="Y">355</property>
+            <property name="Y">360</property>
           </packing>
         </child>
         <child>
@@ -180,7 +180,7 @@
           </widget>
           <packing>
             <property name="X">270</property>
-            <property name="Y">390</property>
+            <property name="Y">385</property>
           </packing>
         </child>
         <child>
@@ -221,7 +221,26 @@
           </widget>
           <packing>
             <property name="X">270</property>
-            <property name="Y">425</property>
+            <property name="Y">410</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Label" id="numberOfStops">
+            <property name="MemberName" />
+            <property name="LabelProp" translatable="yes">Number of Stops text</property>
+          </widget>
+          <packing>
+            <property name="X">270</property>
+            <property name="Y">435</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.ProgressBar" id="progressbar1">
+            <property name="MemberName" />
+          </widget>
+          <packing>
+            <property name="X">324</property>
+            <property name="Y">332</property>
           </packing>
         </child>
       </widget>

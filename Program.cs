@@ -131,7 +131,7 @@ namespace RTD_UI_Application
 
 
 		// Takes bus stop name and calculates when next bus leaves
-		static public double getNextDepartureTimeForStopName(string stopname)
+		public static double getNextDepartureTimeForStopName(string stopname)
 		{
 			Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/TripUpdate.pb");
 			//Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/VehiclePosition.pb");
@@ -163,22 +163,29 @@ namespace RTD_UI_Application
 
 							for (int i = 0; i < entity.trip_update.stop_time_update.Count; i++)
 							{
-                            if (Stop.stops[(entity.trip_update.stop_time_update[i]).stop_id].stop_name == stopname)
+
+
+								if (Stop.stops.ContainsKey(entity.trip_update.stop_time_update[i].stop_id))
 								{
-									Console.WriteLine(entity.trip_update.stop_time_update[i].departure.time);
-                                    return entity.trip_update.stop_time_update[i].departure.time;
-                                    //break;
+									if (Stop.stops[entity.trip_update.stop_time_update[i].stop_id].stop_name == stopname)
+									{
+										if (entity.trip_update.stop_time_update[i].departure != null)
+										{
+											return entity.trip_update.stop_time_update[i].departure.time;
+										}
+									}
 								}
+
 							}
 					}
 				}
 			}
-            return 0;   // "no active busses for that stop";
+			return 0;
 		}
 
 
 		// Takes starting and destination stop and gives time of arrival estimate
-		static public double getTimeOfArrivalEstimate(string start, string finish)
+		public static double getTimeOfArrivalEstimate(string start, string finish)
 		{
 			Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/TripUpdate.pb");
 			//Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/VehiclePosition.pb");
@@ -218,52 +225,97 @@ namespace RTD_UI_Application
 
 										for (int i = 0; i < entity.trip_update.stop_time_update.Count; i++)
 										{
+											//if(entity.trip_update.vehicle.id == )
 											if (Stop.stops[entity.trip_update.stop_time_update[i].stop_id].stop_name == finish)
 											{
 												//Console.WriteLine(entity.trip_update.stop_time_update[i].arrival.time);
 												return entity.trip_update.stop_time_update[i].arrival.time;
 
 											}
-
-											//return "no bus route between these stops.";
 										}
 										return 0;
 
 									}
 								}
-								// StopTimeUpdates *may* have the following data:
-								//  stop_sequence:  uint
-								//  arrival:        StopTimeEvent - see below
-								//  departure:      StopTimeEvent - see below
-								//  stop_id:        string
-								//  schedule_relationsip:  SCHEDULED, SKIPPED, or NO_DATA
-
-								//Console.WriteLine();
-								//Console.WriteLine("Stop Sequence = " + update.stop_sequence.ToString());
-
-								//  Arrival and Departure are StopTimeEvents, which have three components
-								//  delay:          int
-								//  time:           long
-								//  uncertainty:    int 
-
-								if (update.arrival != null)
-								{
-									//Console.WriteLine("Arrival Time = " + UnixTimeStampToDateTime(update.arrival.time).ToString());
-									//Console.WriteLine("Delay = " + update.arrival.delay.ToString()); // RTD appears to always sends 0
-								}
-								if (update.departure != null)
-								{
-									//Console.WriteLine("Departure Time = " + UnixTimeStampToDateTime(update.departure.time).ToString());
-									//Console.WriteLine("Delay = " + update.departure.delay.ToString()); // RTD appears always sends 0
-								}
-								//Console.WriteLine("Stop ID = " + update.stop_id);
-								//Console.WriteLine("Schedule Relationship  = " + update.schedule_relationship.ToString());
 							}
-							Console.WriteLine();
 						}
 					}
 				}
 			}
+			return 0;
+		}
+
+
+		// Takes starting and destination stop and gives number of stops inbetween
+		public static int getNumberOfStopsForTrip(string first, string last)
+		{
+			Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/TripUpdate.pb");
+			//Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/VehiclePosition.pb");
+			WebRequest myWebRequest = HttpWebRequest.Create(myUri);
+
+			HttpWebRequest myHttpWebRequest = (HttpWebRequest)myWebRequest;
+
+			// This username and password is issued for the IWKS 4120 class. Please DO NOT redistribute.
+			NetworkCredential myNetworkCredential = new NetworkCredential("RTDgtfsRT", "realT!m3Feed");    // insert credentials here
+
+			CredentialCache myCredentialCache = new CredentialCache();
+			myCredentialCache.Add(myUri, "Basic", myNetworkCredential);
+
+			myHttpWebRequest.PreAuthenticate = true;
+			myHttpWebRequest.Credentials = myCredentialCache;
+
+			FeedMessage feed = Serializer.Deserialize<FeedMessage>(myWebRequest.GetResponse().GetResponseStream());
+
+			//  Stop stop_inst = new Stop();
+			Trip trip_inst = new Trip();
+			int stopcount = 0;
+
+			foreach (FeedEntity entity in feed.entity)
+			{
+				if (entity.trip_update != null)
+				{
+					if (entity.trip_update.trip != null)
+					{
+						if (entity.trip_update.stop_time_update != null)
+						{
+
+
+							foreach (TripUpdate.StopTimeUpdate update in entity.trip_update.stop_time_update)
+							{
+								if (Stop.stops.ContainsKey(update.stop_id))
+								{
+									if (Stop.stops[update.stop_id].stop_name == first)
+									{
+
+										for (int i = 0; i < entity.trip_update.stop_time_update.Count; i++)
+										{
+											stopcount++;
+
+											if (Stop.stops[entity.trip_update.stop_time_update[i].stop_id].stop_name == last)
+											{
+												stopcount--;
+
+												return stopcount;
+
+											}
+
+
+										}
+										return 0;
+
+									}
+								}
+
+							}
+
+
+
+						}
+					}
+				}
+			}
+
+
 			return 0;
 		}
 

@@ -6,6 +6,8 @@ using transit_realtime;
 using System.Collections.Generic;
 using GoogleMaps.LocationServices;
 using System.Diagnostics;
+using System.ComponentModel;
+using System.Threading;
 
 using RTD_UI_Application;
 
@@ -29,6 +31,7 @@ public partial class MainWindow : Gtk.Window
     private GoogleLocationService service = new GoogleLocationService();
     private double userLatitude = 39.746025;
     private double userLongitude = -104.999083;
+    private BackgroundWorker backgroundWorker1 = new BackgroundWorker();
 
 
     public MainWindow() : base(Gtk.WindowType.Toplevel)
@@ -61,6 +64,9 @@ public partial class MainWindow : Gtk.Window
         // Set up Go button
         setUpGoButton();
         setGoButtonVisible(goButtonVisible);
+
+        // Set up Background worker and progress bar
+        setUpBackgroundWorker();
     }
 
     public void setUpUserName()
@@ -138,6 +144,10 @@ public partial class MainWindow : Gtk.Window
         startBox.SetSizeRequest(560, 30);
         allStops = Program.returnAllBusStops();
 
+		Console.WriteLine("\nSort Based on Name");
+        Comparison<Stop.stop_t> comparisonModel = new Comparison<Stop.stop_t>(Stop.CompareTwoStops);
+		allStops.Sort(comparisonModel);
+
         int i = 0;
         foreach (Stop.stop_t s in allStops)
         {
@@ -183,13 +193,14 @@ public partial class MainWindow : Gtk.Window
         tripDistance.Visible = false;
         nextBusDeparture.Visible = false;
         estimatedArrival.Visible = false;
+        numberOfStops.Visible = false;
     }
 
     public String getUserLocationFromLatLong()
     {
         // convert lat, long to physical address and return it
         String result = service.GetAddressFromLatLang(userLatitude, userLongitude).ToString();
-        if (result == null)
+        if (System.String.IsNullOrEmpty(result))
         {
             result = "Lawrence Street Center, Denver, CO, 80204";
         }
@@ -211,6 +222,16 @@ public partial class MainWindow : Gtk.Window
         return service.GetLatLongFromAddress(userLocation).Longitude;
     }
 
+	public void setUpBackgroundWorker()
+	{
+		backgroundWorker1.DoWork += backgroundWorker1_DoWork;
+		backgroundWorker1.ProgressChanged += backgroundWorker1_ProgressChanged;
+		backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted; 
+		backgroundWorker1.WorkerReportsProgress = true;
+		backgroundWorker1.WorkerSupportsCancellation = true;
+		progressbar1.Visible = false;
+	}
+
     public void setUpGoButton()
     {
         //goButton.ModifyFont(bigFontStyle);
@@ -225,27 +246,7 @@ public partial class MainWindow : Gtk.Window
 
     public void goButtonClicked(object obj, EventArgs args)
     {
-        Console.WriteLine("Go Button Clicked");
-
-        // Update latitude and longitude for user selected start location
-        searchComboBoxFor(allStops, userSelectedStartLocation, true);
-
-        // Update latitude and longitude for user selected destination location
-        searchComboBoxFor(allDestinations, userSelectedDestinationLocation, false);
-
-        if (startLatitude != 0 && destinationLatitude != 0)
-        {
-            calcDistance = distance(startLatitude, startLongitude,
-                     destinationLatitude, destinationLongitude, setUnits);
-            //Console.WriteLine("INSIDE goButtonClicked");
-            resetStartDestinationCoordinates();
-
-            tripDistance.Visible = true;
-
-            updateTextForTripDistance(setUnits);
-            updateNextBusDepartureTime();
-            updateEstimatedArrivalTime();
-        }
+        backgroundWorker1.RunWorkerAsync();
     }
 
     public void onComboBoxChanged(object o, EventArgs args)
@@ -400,7 +401,7 @@ public partial class MainWindow : Gtk.Window
                 calcDistance = km2miles(calcDistance);
                 setUnits = units;
             }
-            setLabelTextWithStyle(tripDistance, "Your Trip's estimated distance is:  " + calcDistance.ToString("0.0") + " miles", mediumBoldFontStyle);
+            setLabelTextWithStyle(tripDistance, "Your Trip's Estimated Distance is:  " + calcDistance.ToString("0.0") + " miles", mediumBoldFontStyle);
         }
         else if (units == 'K')
         {
@@ -409,13 +410,12 @@ public partial class MainWindow : Gtk.Window
                 calcDistance = miles2km(calcDistance);
                 setUnits = units;
 			}
-            setLabelTextWithStyle(tripDistance, "Your Trip's estimated distance is:  " + calcDistance.ToString("0.0") + " kilometers", mediumBoldFontStyle);
+            setLabelTextWithStyle(tripDistance, "Your Trip's Estimated Distance is:  " + calcDistance.ToString("0.0") + " kilometers", mediumBoldFontStyle);
         }
     }
 
     public void updateNextBusDepartureTime()
     {
-        nextBusDeparture.Visible = true;
         double time = Program.getNextDepartureTimeForStopName(userSelectedStartLocation);
         if (time > 0)
         {
@@ -431,7 +431,6 @@ public partial class MainWindow : Gtk.Window
     }
 
     public void updateEstimatedArrivalTime() {
-        estimatedArrival.Visible = true;
         double eta = Program.getTimeOfArrivalEstimate(userSelectedStartLocation, userSelectedDestinationLocation);
 
         if (eta > 0) {
@@ -445,6 +444,105 @@ public partial class MainWindow : Gtk.Window
         }
     }
 
+    public void updateNumberOfStopsForTrip() {
+        int result = Program.getNumberOfStopsForTrip(userSelectedStartLocation, userSelectedDestinationLocation);
+
+		numberOfStops.Text = "Number of Stops for Selected Trip:  " + result;
+        setLabelTextWithStyle(numberOfStops, numberOfStops.Text, mediumBoldFontStyle);
+    }
+
+	//Start Process
+	private void button1_Click(object sender, EventArgs e)
+	{
+		backgroundWorker1.RunWorkerAsync();
+	}
+
+	//Cancel Process
+	private void button2_Click(object sender, EventArgs e)
+	{
+		//Check if background worker is doing anything and send a cancellation if it is
+		if (backgroundWorker1.IsBusy)
+		{
+			backgroundWorker1.CancelAsync();
+		}
+
+	}
+
+	private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+	{
+		// Hide all result UI elements and disable go button
+        tripDistance.Visible = false;
+        nextBusDeparture.Visible = false;
+        estimatedArrival.Visible = false;
+        numberOfStops.Visible = false;
+
+        goButton.Visible = false;
+
+
+        // Update latitude and longitude for user selected start location
+		searchComboBoxFor(allStops, userSelectedStartLocation, true);
+
+		// Update latitude and longitude for user selected destination location
+		searchComboBoxFor(allDestinations, userSelectedDestinationLocation, false);
+
+		if (startLatitude != 0 && destinationLatitude != 0)
+		{
+			calcDistance = distance(startLatitude, startLongitude,
+			destinationLatitude, destinationLongitude, setUnits);
+			//Console.WriteLine("INSIDE goButtonClicked");
+			resetStartDestinationCoordinates();
+
+			// get Trip scan results
+			updateTextForTripDistance(setUnits);
+            backgroundWorker1.ReportProgress(25);
+			updateNextBusDepartureTime();
+            backgroundWorker1.ReportProgress(50);
+			updateEstimatedArrivalTime();
+            backgroundWorker1.ReportProgress(75);
+			updateNumberOfStopsForTrip();
+            backgroundWorker1.ReportProgress(100);
+
+			// display Trip scan results
+            tripDistance.Visible = true;
+			nextBusDeparture.Visible = true;
+			estimatedArrival.Visible = true;
+			numberOfStops.Visible = true;
+		}
+
+		//Check if there is a request to cancel the process
+		if (backgroundWorker1.CancellationPending)
+		{
+			e.Cancel = true;
+			backgroundWorker1.ReportProgress(0);
+			return;
+		}
+
+        goButton.Visible = true;
+        return;
+	}
+
+	private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+	{
+        progressbar1.Visible = true;
+        progressbar1.Text = "Computing results (" + e.ProgressPercentage + "%)";
+        progressbar1.Adjustment.Value = e.ProgressPercentage;
+	}
+
+	private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+	{
+		if (e.Cancelled)
+		{
+            progressbar1.Text = "Request cancelled";
+		}
+		else
+		{
+			progressbar1.Text = "Computed Successfully";
+		}
+
+		// Hide progress bar after 5 seconds
+		Thread.Sleep(5000);
+		progressbar1.Visible = false;
+	}
     public static DateTime convertUnixTimeStampToDateTime(double unixTimeStamp)
     {
         // Unix timestamp is seconds past epoch
