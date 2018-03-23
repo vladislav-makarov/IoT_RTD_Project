@@ -60,19 +60,13 @@ namespace RTD_UI_Application
 		}
 
         public delegate int Comparison<T>(
-
             T x,
-
             T y
-
         );
 
         public static int CompareTwoStops(Stop.stop_t s1, Stop.stop_t s2)
-
 		{
-
             return s1.stop_name.CompareTo(s2.stop_name);
-
 		}
     }
 }

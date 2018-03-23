@@ -204,8 +204,6 @@ public partial class MainWindow : Gtk.Window
         {
             result = "Lawrence Street Center, Denver, CO, 80204";
         }
-        //String result = "lat: " + service.GetLatLongFromAddress(userLocation).Latitude.ToString() + ", long: " + service.GetLatLongFromAddress(userLocation).Longitude.ToString();
-        //Console.WriteLine("result:  ****   " + result)
 
         return result;
     }
@@ -301,8 +299,7 @@ public partial class MainWindow : Gtk.Window
                 }
 
             }
-            //Console.WriteLine(s.stop_name);
-            //destinationBox.InsertText(i, s.stop_name);
+
             i++;
         }
     }
@@ -379,9 +376,6 @@ public partial class MainWindow : Gtk.Window
 
 	public static double km2miles(double kilometers)
 	{
-		//
-		// Multiply by this constant.
-		//
 		return kilometers * 0.621371192;
 	}
 
@@ -476,7 +470,7 @@ public partial class MainWindow : Gtk.Window
         estimatedArrival.Visible = false;
         numberOfStops.Visible = false;
 
-        goButton.Visible = false;
+        goButton.Sensitive = false;
 
 
         // Update latitude and longitude for user selected start location
@@ -517,7 +511,7 @@ public partial class MainWindow : Gtk.Window
 			return;
 		}
 
-        goButton.Visible = true;
+        goButton.Sensitive = true;
         return;
 	}
 
