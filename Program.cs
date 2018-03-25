@@ -272,6 +272,7 @@ namespace RTD_UI_Application
 
 			foreach (FeedEntity entity in feed.entity)
 			{
+                stopcount = 0;
 				if (entity.trip_update != null)
 				{
 					if (entity.trip_update.trip != null)
@@ -289,16 +290,21 @@ namespace RTD_UI_Application
 
 										for (int i = 0; i < entity.trip_update.stop_time_update.Count; i++)
 										{
-											stopcount++;
-
-											if (Stop.stops[entity.trip_update.stop_time_update[i].stop_id].stop_name == last)
+											if (Stop.stops[entity.trip_update.stop_time_update[i].stop_id].stop_name == first)
 											{
-												stopcount--;
 
-												return stopcount;
+												for (int n = i; n < entity.trip_update.stop_time_update.Count; n++)
+												{
+													stopcount++;
+													if (Stop.stops[entity.trip_update.stop_time_update[n].stop_id].stop_name == last)
+													{
+														//stopcount--;
 
+														return stopcount;
+
+													}
+												}
 											}
-
 
 										}
 										return 0;
@@ -314,8 +320,6 @@ namespace RTD_UI_Application
 					}
 				}
 			}
-
-
 			return 0;
 		}
 

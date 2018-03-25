@@ -1,12 +1,12 @@
 ﻿<Properties StartupConfiguration="{CD450088-FB9B-4574-BE58-949A1CE13998}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="MainWindow.cs">
     <Files>
-      <File FileName="Stop.cs" Line="70" Column="42" />
+      <File FileName="Stop.cs" Line="70" Column="4" />
       <File FileName="packages.config" Line="1" Column="1" />
       <File FileName="Trip.cs" Line="2" Column="16" />
-      <File FileName="Program.cs" Line="270" Column="1" />
+      <File FileName="Program.cs" Line="301" Column="15" />
       <File FileName="gtk-gui/MainWindow.cs" Line="1" Column="1" />
-      <File FileName="MainWindow.cs" Line="483" Column="36" />
+      <File FileName="MainWindow.cs" Line="149" Column="34" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

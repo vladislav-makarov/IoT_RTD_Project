@@ -144,9 +144,11 @@ public partial class MainWindow : Gtk.Window
         startBox.SetSizeRequest(560, 30);
         allStops = Program.returnAllBusStops();
 
-		Console.WriteLine("\nSort Based on Name");
-        Comparison<Stop.stop_t> comparisonModel = new Comparison<Stop.stop_t>(Stop.CompareTwoStops);
-		allStops.Sort(comparisonModel);
+        // Sort the Stop list in alphabetical order
+        sortValuesInAlphabeticalOrderForList(allStops);
+
+        // Remove duplicate Stops from list
+        removeDuplicatesForList(allStops);
 
         int i = 0;
         foreach (Stop.stop_t s in allStops)
@@ -178,6 +180,25 @@ public partial class MainWindow : Gtk.Window
 
         destinationBox.Changed += new EventHandler(onComboBoxChanged);
     }
+
+	public static void sortValuesInAlphabeticalOrderForList(List<Stop.stop_t> allStops)
+	{
+		Console.WriteLine("\nSort Based on Name");
+		Comparison<Stop.stop_t> comparisonModel = new Comparison<Stop.stop_t>(Stop.CompareTwoStops);
+		allStops.Sort(comparisonModel);
+	}
+
+	public static void removeDuplicatesForList(List<Stop.stop_t> allStops)
+	{
+		Int32 index = 0;
+		while (index < allStops.Count - 1)
+		{
+			if (allStops[index].stop_name == allStops[index + 1].stop_name)
+				allStops.RemoveAt(index);
+			else
+				index++;
+		}
+	}
 
     public void setUpStartAndDestinationText()
     {
