@@ -243,6 +243,16 @@
             <property name="Y">332</property>
           </packing>
         </child>
+        <child>
+          <widget class="Gtk.Label" id="tripStatus">
+            <property name="MemberName" />
+            <property name="LabelProp" translatable="yes">Trip status text here</property>
+          </widget>
+          <packing>
+            <property name="X">20</property>
+            <property name="Y">280</property>
+          </packing>
+        </child>
       </widget>
     </child>
   </widget>

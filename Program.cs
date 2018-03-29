@@ -14,6 +14,7 @@ namespace RTD_UI_Application
     class Program
 	{
         public static List<Stop.stop_t> allstops = new List<Stop.stop_t>();
+        public static string tripStatus = "N/A";
         
 		static void Main(string[] args)
         {
@@ -171,6 +172,7 @@ namespace RTD_UI_Application
 									{
 										if (entity.trip_update.stop_time_update[i].departure != null)
 										{
+                                            tripStatus = entity.trip_update.stop_time_update[i].schedule_relationship.ToString();
 											return entity.trip_update.stop_time_update[i].departure.time;
 										}
 									}
@@ -180,6 +182,7 @@ namespace RTD_UI_Application
 					}
 				}
 			}
+            tripStatus = "N/A";
 			return 0;
 		}
 

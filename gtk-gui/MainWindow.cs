@@ -49,6 +49,8 @@ public partial class MainWindow
 
 	private global::Gtk.ProgressBar progressbar1;
 
+	private global::Gtk.Label tripStatus;
+
 	protected virtual void Build()
 	{
 		global::Stetic.Gui.Initialize(this);
@@ -239,6 +241,14 @@ public partial class MainWindow
 		global::Gtk.Fixed.FixedChild w20 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.progressbar1]));
 		w20.X = 324;
 		w20.Y = 332;
+		// Container child mainWindow.Gtk.Fixed+FixedChild
+		this.tripStatus = new global::Gtk.Label();
+		this.tripStatus.Name = "tripStatus";
+		this.tripStatus.LabelProp = global::Mono.Unix.Catalog.GetString("Trip status text here");
+		this.mainWindow.Add(this.tripStatus);
+		global::Gtk.Fixed.FixedChild w21 = ((global::Gtk.Fixed.FixedChild)(this.mainWindow[this.tripStatus]));
+		w21.X = 20;
+		w21.Y = 280;
 		this.Add(this.mainWindow);
 		if ((this.Child != null))
 		{

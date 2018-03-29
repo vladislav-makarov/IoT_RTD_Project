@@ -17,7 +17,7 @@ public partial class MainWindow : Gtk.Window
     public static List<Stop.stop_t> allStops, allDestinations;
     public static String userSelectedStartLocation;           // holds user selected Start location
     public static String userSelectedDestinationLocation;     // holds user selected Destination location
-    public FontDescription smallFontStyle, mediumFontStyle, mediumBoldFontStyle, bigFontStyle, bigBoldFontStyle, extraBigBoldFontStyle;
+    public FontDescription smallFontStyle, mediumFontStyle, mediumBoldFontStyle, mediumItalicFontStyle, bigFontStyle, bigBoldFontStyle, extraBigBoldFontStyle;
     public String userFullName = "";
     public String userLocation;
     public String userLocationText = "Your current location is:";
@@ -91,6 +91,12 @@ public partial class MainWindow : Gtk.Window
         mediumBoldFontStyle.Family = "Arial";
         mediumBoldFontStyle.Weight = Pango.Weight.Semibold;
         mediumBoldFontStyle.Size = Convert.ToInt32(12 * Pango.Scale.PangoScale);
+
+		mediumItalicFontStyle = new FontDescription();
+		mediumItalicFontStyle.Family = "Arial";
+		mediumItalicFontStyle.Weight = Pango.Weight.Ultralight;
+        mediumItalicFontStyle.Style = Pango.Style.Italic;
+		mediumItalicFontStyle.Size = Convert.ToInt32(12 * Pango.Scale.PangoScale);
 
         bigFontStyle = new FontDescription();
         bigFontStyle.Family = "Arial";
@@ -210,11 +216,9 @@ public partial class MainWindow : Gtk.Window
         startAtText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(0, 204, 102));
         destinationText.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(204, 0, 0));
         startAtTextNote.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
+        tripStatus.ModifyFg(Gtk.StateType.Normal, new Gdk.Color(128, 128, 128));
 
-        tripDistance.Visible = false;
-        nextBusDeparture.Visible = false;
-        estimatedArrival.Visible = false;
-        numberOfStops.Visible = false;
+        resetTripResultsText();
     }
 
     public String getUserLocationFromLatLong()
@@ -416,7 +420,7 @@ public partial class MainWindow : Gtk.Window
                 calcDistance = km2miles(calcDistance);
                 setUnits = units;
             }
-            setLabelTextWithStyle(tripDistance, "Your Trip's Estimated Distance is:  " + calcDistance.ToString("0.0") + " miles", mediumBoldFontStyle);
+            setLabelTextWithStyle(tripDistance, "(1) Your Trip's Estimated Distance is:  " + calcDistance.ToString("0.0") + " miles", mediumBoldFontStyle);
         }
         else if (units == 'K')
         {
@@ -425,7 +429,7 @@ public partial class MainWindow : Gtk.Window
                 calcDistance = miles2km(calcDistance);
                 setUnits = units;
 			}
-            setLabelTextWithStyle(tripDistance, "Your Trip's Estimated Distance is:  " + calcDistance.ToString("0.0") + " kilometers", mediumBoldFontStyle);
+            setLabelTextWithStyle(tripDistance, "(1) Your Trip's Estimated Distance is:  " + calcDistance.ToString("0.0") + " kilometers", mediumBoldFontStyle);
         }
     }
 
@@ -435,13 +439,24 @@ public partial class MainWindow : Gtk.Window
         if (time > 0)
         {
             DateTime estimatedTime = convertUnixTimeStampToDateTime(time);
-            nextBusDeparture.Text = "Next Bus Departure is:  @" + estimatedTime.ToString("hh:mm tt on dddd, MMMM dd");
+            nextBusDeparture.Text = "(2) Next Bus Departure is:  @" + estimatedTime.ToString("hh:mm tt on dddd, MMMM dd");
             setLabelTextWithStyle(nextBusDeparture, nextBusDeparture.Text, mediumBoldFontStyle);
         }
         else
         {
-            nextBusDeparture.Text = "Next Bus Departure is:  no active busses for that stop";
+            nextBusDeparture.Text = "(2) Next Bus Departure is:  no active busses for that stop";
             setLabelTextWithStyle(nextBusDeparture, nextBusDeparture.Text, mediumBoldFontStyle);
+        }
+    }
+
+    public void updateTripStatus() {
+        string result = Program.tripStatus;
+        if (result != null) {
+            tripStatus.Text = "Bus Status: " + result;
+            setLabelTextWithStyle(tripStatus, tripStatus.Text, mediumItalicFontStyle);
+            tripStatus.Visible = true;
+        } else {
+            tripStatus.Visible = false;
         }
     }
 
@@ -450,11 +465,11 @@ public partial class MainWindow : Gtk.Window
 
         if (eta > 0) {
 			DateTime estimatedTime = convertUnixTimeStampToDateTime(eta);
-			estimatedArrival.Text = "Estimated Time of Arrival is:  @" + estimatedTime.ToString("hh:mm tt on dddd, MMMM dd");
+            estimatedArrival.Text = "(3) Estimated Time of Arrival is:  @" + estimatedTime.ToString("hh:mm tt on dddd, MMMM dd");
 			setLabelTextWithStyle(estimatedArrival, estimatedArrival.Text, mediumBoldFontStyle);
         }
         else {
-            estimatedArrival.Text = "Estimated Time of Arrival is:  no bus route between these stops";
+            estimatedArrival.Text = "(3) Estimated Time of Arrival is:  no bus route between these stops";
             setLabelTextWithStyle(estimatedArrival, estimatedArrival.Text, mediumBoldFontStyle);
         }
     }
@@ -462,7 +477,7 @@ public partial class MainWindow : Gtk.Window
     public void updateNumberOfStopsForTrip() {
         int result = Program.getNumberOfStopsForTrip(userSelectedStartLocation, userSelectedDestinationLocation);
 
-		numberOfStops.Text = "Number of Stops for Selected Trip:  " + result;
+        numberOfStops.Text = "(4) Number of Stops for Selected Trip:  " + result;
         setLabelTextWithStyle(numberOfStops, numberOfStops.Text, mediumBoldFontStyle);
     }
 
@@ -484,59 +499,56 @@ public partial class MainWindow : Gtk.Window
 	}
 
 	private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-	{
-		// Hide all result UI elements and disable go button
-        tripDistance.Visible = false;
-        nextBusDeparture.Visible = false;
-        estimatedArrival.Visible = false;
-        numberOfStops.Visible = false;
-
+    {
+        // Reset all trip result UI elements and disable go button
+        resetTripResultsText();
         goButton.Sensitive = false;
 
-
         // Update latitude and longitude for user selected start location
-		searchComboBoxFor(allStops, userSelectedStartLocation, true);
+        searchComboBoxFor(allStops, userSelectedStartLocation, true);
 
-		// Update latitude and longitude for user selected destination location
-		searchComboBoxFor(allDestinations, userSelectedDestinationLocation, false);
+        // Update latitude and longitude for user selected destination location
+        searchComboBoxFor(allDestinations, userSelectedDestinationLocation, false);
 
-		if (startLatitude != 0 && destinationLatitude != 0)
-		{
-			calcDistance = distance(startLatitude, startLongitude,
-			destinationLatitude, destinationLongitude, setUnits);
-			//Console.WriteLine("INSIDE goButtonClicked");
-			resetStartDestinationCoordinates();
+        if (startLatitude != 0 && destinationLatitude != 0)
+        {
+            calcDistance = distance(startLatitude, startLongitude,
+            destinationLatitude, destinationLongitude, setUnits);
+            //Console.WriteLine("INSIDE goButtonClicked");
+            resetStartDestinationCoordinates();
 
-			// get Trip scan results
-			updateTextForTripDistance(setUnits);
+            // get Trip scan results
+            updateTextForTripDistance(setUnits);
             backgroundWorker1.ReportProgress(25);
-			updateNextBusDepartureTime();
+            updateNextBusDepartureTime();
+            updateTripStatus();
             backgroundWorker1.ReportProgress(50);
-			updateEstimatedArrivalTime();
+            updateEstimatedArrivalTime();
             backgroundWorker1.ReportProgress(75);
-			updateNumberOfStopsForTrip();
+            updateNumberOfStopsForTrip();
             backgroundWorker1.ReportProgress(100);
 
-			// display Trip scan results
+            // display Trip scan results
             tripDistance.Visible = true;
-			nextBusDeparture.Visible = true;
-			estimatedArrival.Visible = true;
-			numberOfStops.Visible = true;
-		}
-
-		//Check if there is a request to cancel the process
-		if (backgroundWorker1.CancellationPending)
-		{
-			e.Cancel = true;
-			backgroundWorker1.ReportProgress(0);
-			return;
-		}
+            nextBusDeparture.Visible = true;
+            estimatedArrival.Visible = true;
+            numberOfStops.Visible = true;
+        }
 
         goButton.Sensitive = true;
         return;
-	}
+    }
 
-	private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+    private void resetTripResultsText()
+    {
+        tripDistance.Visible = false;
+		nextBusDeparture.Visible = false;
+		estimatedArrival.Visible = false;
+		numberOfStops.Visible = false;
+        tripStatus.Visible = false;
+    }
+
+    private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
 	{
         progressbar1.Visible = true;
         progressbar1.Text = "Computing results (" + e.ProgressPercentage + "%)";
@@ -555,8 +567,8 @@ public partial class MainWindow : Gtk.Window
 		}
 
 		// Hide progress bar after 5 seconds
-		Thread.Sleep(5000);
-		progressbar1.Visible = false;
+		//Thread.Sleep(5000);
+		progressbar1.Visible = true;
 	}
     public static DateTime convertUnixTimeStampToDateTime(double unixTimeStamp)
     {
